@@ -27,7 +27,7 @@ export default function SignInPage() {
       <input className="w-full border p-2" placeholder="Email" onChange={e => setEmail(e.target.value)} />
       <input className="w-full border p-2" placeholder="Password" type="password" onChange={e => setPassword(e.target.value)} />
       {error && <p className="text-red-500">{error}</p>}
-      <button className="bg-blue-600 text-white px-4 py-2 rounded w-full" type="submit">Sign In</button>
+      <button className="bg-black text-white px-4 py-2 rounded w-full" type="submit">Sign In</button>
     </form>
   )
 }
