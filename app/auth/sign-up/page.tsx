@@ -1,8 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function SignUpPage() {
+  const router = useRouter()
+
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -11,18 +15,41 @@ export default function SignUpPage() {
   })
 
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
+    setLoading(true)
+
     const res = await fetch('/api/sign-up', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
     })
 
-    if (res.ok) setSuccess(true)
-    else setError('Sign up failed')
+    const data = await res.json()
+
+    if (!res.ok) {
+      setError(data.error || 'Sign-up failed')
+      setLoading(false)
+      return
+    }
+
+    // Auto-login
+    const login = await signIn('credentials', {
+      email: form.email,
+      password: form.password,
+      redirect: false,
+    })
+
+    if (login?.error) {
+      setError('Signed up, but failed to log in')
+      setLoading(false)
+      return
+    }
+
+    router.push('/')
   }
 
   return (
@@ -36,13 +63,14 @@ export default function SignUpPage() {
       <input
         className="w-full border p-2"
         placeholder="Email"
+        type="email"
         value={form.email}
         onChange={e => setForm({ ...form, email: e.target.value })}
       />
       <input
         className="w-full border p-2"
-        type="password"
         placeholder="Password"
+        type="password"
         value={form.password}
         onChange={e => setForm({ ...form, password: e.target.value })}
       />
@@ -54,11 +82,14 @@ export default function SignUpPage() {
         <option value="individual">Individual</option>
         <option value="shop">Shop</option>
       </select>
-      <button className="bg-blue-600 text-white px-4 py-2 rounded w-full" type="submit">
-        Sign Up
+      {error && <p className="text-red-600 text-sm">{error}</p>}
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+        disabled={loading}
+      >
+        {loading ? 'Signing up...' : 'Sign Up'}
       </button>
-      {success && <p className="text-green-600">Signed up successfully! ✅</p>}
-      {error && <p className="text-red-600">{error}</p>}
     </form>
   )
 }
