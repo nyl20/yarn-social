@@ -7,13 +7,19 @@ export default function Navbar() {
   const { data: session } = useSession()
 
   return (
-    <nav className="flex justify-between items-center px-6 py-4 bg-gray-100">
-      <Link href="/" className="text-xl font-bold">MyApp</Link>
+    <nav className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-white shadow-sm font-sans">
+      <div className="flex items-center gap-6 text-[#333] font-bold">
+        <span className="text-2xl">🧶</span>
+        <Link href="/" className="hover:text-[#4497B7] transition">Home</Link>
+        <Link href="/posts" className="hover:text-[#4497B7] transition">Posts</Link>
+        <Link href="/profile" className="hover:text-[#4497B7] transition">Profile</Link>
+      </div>
+
       <div className="flex gap-4 items-center">
         {!session?.user ? (
           <>
-            <Link href="/auth/sign-in" className="text-blue-600 hover:underline">Sign In</Link>
-            <Link href="/auth/sign-up" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Sign Up</Link>
+            <Link href="/auth/sign-in" className="text-[#4497B7] hover:underline">Sign In</Link>
+            <Link href="/auth/sign-up" className="bg-[#4497B7] text-white px-4 py-2 rounded hover:bg-black">Sign Up</Link>
           </>
         ) : (
           <button
