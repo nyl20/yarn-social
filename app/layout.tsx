@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-body text-[#333]">
         <SessionLayout>
           <Navbar />
-          <main className="p-6">{children}</main>
+          <main>{children}</main>
         </SessionLayout>
       </body>
     </html>
