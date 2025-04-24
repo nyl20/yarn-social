@@ -85,7 +85,7 @@ export default function SignUpPage() {
       {error && <p className="text-red-600 text-sm">{error}</p>}
       <button
         type="submit"
-        className="bg-black text-white px-4 py-2 rounded w-full"
+        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
         disabled={loading}
       >
         {loading ? 'Signing up...' : 'Sign Up'}
