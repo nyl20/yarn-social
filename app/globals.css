@@ -1,15 +1,12 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  --background: #FFFFFF;
+  --foreground: #171717;
+  --font-title: 'Playfair Display', serif;
+  --font-body: 'Nunito', sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +19,48 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), sans-serif;
+}
+
+h1, h2 {
+  font-family: var(--font-title), serif;
+  font-weight: 700;
+}
+
+/* scrollbar */
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable overlay;
+}
+::-webkit-scrollbar {
+  height: 4px;
+  width: 5px;
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 10px;
+}
+.scrollbar-overlay {
+  overflow-x: auto;
+  scrollbar-gutter: stable overlay;
+}
+
+
+/* custom fade-in */
+@layer utilities {
+  .animate-fadeIn {
+    animation: fadeIn 1s ease-out both;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
