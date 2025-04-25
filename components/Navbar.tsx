@@ -12,7 +12,9 @@ export default function Navbar() {
         <span className="text-2xl">🧶</span>
         <Link href="/" className="hover:text-[#4497B7] transition">Home</Link>
         <Link href="/posts" className="hover:text-[#4497B7] transition">Posts</Link>
-        <Link href="/profile" className="hover:text-[#4497B7] transition">Profile</Link>
+        {session?.user && (
+          <Link href="/profile" className="hover:text-[#4497B7] transition">Profile</Link>
+        )}
       </div>
 
       <div className="flex gap-4 items-center">

@@ -5,11 +5,12 @@ import { db } from '@/database/db'
 import * as schema from '@/database/schema'
 import { eq } from 'drizzle-orm'
 import { compare } from 'bcryptjs'
+import { JWT } from 'next-auth/jwt'
 
-const handler = NextAuth({
+export const authOptions = {
   adapter: DrizzleAdapter(db),
   session: {
-    strategy: 'jwt',
+    strategy: 'jwt' as 'jwt',
   },
   providers: [
     CredentialsProvider({
@@ -49,7 +50,7 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
         token.id = user.id
         token.role = user.role
@@ -57,7 +58,7 @@ const handler = NextAuth({
       }
       return token
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: JWT }) {
       if (token) {
         session.user.id = token.id
         session.user.role = token.role
@@ -70,7 +71,9 @@ const handler = NextAuth({
     signIn: '/auth/sign-in',
   },
   secret: process.env.NEXTAUTH_SECRET,
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export const GET = handler
 export const POST = handler
