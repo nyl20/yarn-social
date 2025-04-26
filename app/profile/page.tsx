@@ -97,7 +97,7 @@ export default function ProfilePage() {
               <input name="title" placeholder="Title" value={form.title} onChange={handleChange} className="w-full p-2 border rounded" required />
               <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} className="w-full p-2 border rounded h-24" />
               <select
-                name="category"
+                name="type"
                 value={form.type}
                 onChange={handleChange}
                 className="w-full border p-2 rounded"
