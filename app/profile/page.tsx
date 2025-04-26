@@ -12,7 +12,7 @@ export default function ProfilePage() {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    type: '',
+    category: '',
     image: '',
     tag: '',
   })
@@ -60,7 +60,7 @@ export default function ProfilePage() {
     }
 
     setSuccess(true)
-    setForm({ title: '', description: '', type: '', image: '', tag: '' })
+    setForm({ title: '', description: '', category: '', image: '', tag: '' })
     setPreview(null)
     setTimeout(() => {
       setSuccess(false)
@@ -98,7 +98,7 @@ export default function ProfilePage() {
               <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} className="w-full p-2 border rounded h-24" />
               <select
                 name="category"
-                value={form.type}
+                value={form.category}
                 onChange={handleChange}
                 className="w-full border p-2 rounded"
                 required
