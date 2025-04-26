@@ -104,6 +104,7 @@ export default function Posts() {
       return 0
     })
 
+  // Reroute if not signed in or add to view count
   const router = useRouter()
   const handlePostClick = async (postId: string) => {
     if (!session) {

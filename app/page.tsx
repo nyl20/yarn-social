@@ -4,12 +4,8 @@ import Image from 'next/image'
 import PostCard from '@/components/PostCard'
 import { db } from '@/database/db'
 import { useState, useEffect } from 'react'
-import { redirect } from "next/navigation"
 import { useRouter } from 'next/navigation'
 import { useSession } from "next-auth/react"
-import { NextResponse } from 'next/server'
-import { posts } from '@/database/schema/posts'
-import { eq, sql } from 'drizzle-orm'
 
 // static data for patterns
 // const patterns = [

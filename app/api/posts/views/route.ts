@@ -3,6 +3,7 @@ import { posts } from "@/database/schema/posts"
 import { eq, sql } from "drizzle-orm"
 import { NextResponse } from "next/server"
 
+// specific POST for updating views when posts are clicked
 export async function POST(request: Request) {
   console.log("API route hit")
   try {
