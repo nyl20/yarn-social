@@ -4,6 +4,8 @@ import Image from 'next/image'
 import PostCard from '@/components/PostCard'
 import { db } from '@/database/db'
 import { useState, useEffect } from 'react'
+import { redirect } from "next/navigation"
+import { useRouter } from 'next/navigation'
 
 // static data for patterns
 // const patterns = [
@@ -80,6 +82,11 @@ export default function LandingPage() {
 
     fetchPosts()
   }, [])
+
+  const router = useRouter()
+  const handlePostClick = () => {
+    router.push('/auth/sign-up')
+  }
   return (
     <div>
       {/* Cover Section */}
@@ -99,16 +106,23 @@ export default function LandingPage() {
         <h2 className="text-3xl font-title font-bold mb-4 px-6">PATTERNS</h2>
         <div className="flex gap-4 overflow-x-auto pb-4 px-6">
           {patternPosts.map((post, idx) => (
-            <PostCard
-              key={idx}
-              title={post.title}
-              description={post.description || ''
-              }
-              author={post.user.name || ''}
-              date={post.createdAt.toString()}
-              tags={[]}
-              image={post.image || ''}
-            />
+            <button key={idx}
+              onClick={handlePostClick}
+              className="hover:opacity-80 transition-opacity"
+            >
+              <PostCard
+                key={idx}
+                title={post.title}
+                description={post.description || ''
+                }
+                author={post.user.name || ''}
+                date={post.createdAt.toString()}
+                tags={[]}
+                image={post.image || ''}
+              />
+            </button>
+
+
           ))}
         </div>
       </section>
@@ -118,16 +132,21 @@ export default function LandingPage() {
         <h2 className="text-3xl font-title font-bold mb-4 px-6">SHOPS</h2>
         <div className="flex gap-4 overflow-x-auto pb-4 px-6">
           {shopPosts.map((post, idx) => (
-            <PostCard
-              key={idx}
-              title={post.title}
-              description={post.description || ''
-              }
-              author={post.user.name || ''}
-              date={post.createdAt.toString()}
-              tags={[]}
-              image={post.image || ''}
-            />
+            <button key={idx}
+              onClick={handlePostClick}
+              className="hover:opacity-80 transition-opacity"
+            >
+              <PostCard
+                key={idx}
+                title={post.title}
+                description={post.description || ''
+                }
+                author={post.user.name || ''}
+                date={post.createdAt.toString()}
+                tags={[]}
+                image={post.image || ''}
+              />
+            </button>
           ))}
         </div>
       </section>

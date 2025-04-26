@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PostCard from '@/components/PostCard'
+import { db } from '@/database/db'
 
 // static data for patterns
 const patterns = [
@@ -26,6 +27,22 @@ const dummyPosts = Array(20).fill({
 
 const allPosts = [...patterns, ...shops, ...dummyPosts]
 
+type Post = {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  image: string | null
+  userId: string
+  description: string | null
+  title: string
+  category: string | null
+  tag: string | null
+  user: {
+    name: string | null
+    email: string | null
+  }
+}
+
 
 // Posts page
 export default function Posts() {
@@ -34,26 +51,53 @@ export default function Posts() {
   const [sortBy, setSortBy] = useState('Latest') // can change to Popular if we decide to use this feature
   const [search, setSearch] = useState('')
 
-  const filteredPosts = allPosts
-    .filter(post => {
-      const matchesCategory = category === 'All' || post.tags.includes(category.toLowerCase())
-      const matchesStyle = style === 'All' || post.tags.includes(style.toLowerCase())
-      const matchesSearch =
-        search === '' ||
-        post.title.toLowerCase().includes(search.toLowerCase()) ||
-        post.description.toLowerCase().includes(search.toLowerCase())
-      return matchesCategory && matchesStyle && matchesSearch
-    })
-    .sort((a, b) => {
-      if (sortBy === 'Latest') {
-        return new Date(b.date).getTime() - new Date(a.date).getTime()
-      } else if (sortBy === 'Popular') {
-        return (b.popularity || 0) - (a.popularity || 0)
-      } else if (sortBy === 'Oldest'){
-        return new Date(a.date).getTime() - new Date(b.date).getTime()
+  const [allPosts, setPosts] = useState<Post[]>([])
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        // Fetch patterns
+        const postsData = await db.query.posts.findMany({
+          limit: 20,
+          with: {
+            user: {
+              columns: {
+                name: true,
+                email: true
+              }
+            }
+          }
+        })
+        setPosts(postsData)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
       }
-      return 0
-    })
+    }
+
+    fetchPosts()
+  }, [])
+
+
+  // const filteredPosts = allPosts
+  //   .filter(post => {
+  //     const matchesCategory = category === 'All' || post.tags.includes(category.toLowerCase())
+  //     const matchesStyle = style === 'All' || post.tags.includes(style.toLowerCase())
+  //     const matchesSearch =
+  //       search === '' ||
+  //       post.title.toLowerCase().includes(search.toLowerCase()) ||
+  //       post.description.toLowerCase().includes(search.toLowerCase())
+  //     return matchesCategory && matchesStyle && matchesSearch
+  //   })
+  //   .sort((a, b) => {
+  //     if (sortBy === 'Latest') {
+  //       return new Date(b.date).getTime() - new Date(a.date).getTime()
+  //     } else if (sortBy === 'Popular') {
+  //       return (b.popularity || 0) - (a.popularity || 0)
+  //     } else if (sortBy === 'Oldest') {
+  //       return new Date(a.date).getTime() - new Date(b.date).getTime()
+  //     }
+  //     return 0
+  //   })
 
   return (
     <div className="min-h-screen bg-[#4497B7] pb-10">
@@ -100,9 +144,21 @@ export default function Posts() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-6">
-        {filteredPosts.map((post, index) => (
-          <PostCard key={index} {...post} />
+        {allPosts.map((post, idx) => (
+          <PostCard
+            key={idx}
+            title={post.title}
+            description={post.description || ''
+            }
+            author={post.user.name || ''}
+            date={post.createdAt.toString()}
+            tags={[]}
+            image={post.image || ''}
+          />
         ))}
+        {/* {filteredPosts.map((post, index) => (
+          <PostCard key={index} {...post} />
+        ))} */}
       </div>
     </div>
   )
