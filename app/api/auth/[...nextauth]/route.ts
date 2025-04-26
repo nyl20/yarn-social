@@ -6,11 +6,7 @@ import * as schema from '@/database/schema'
 import { eq } from 'drizzle-orm'
 import { compare } from 'bcryptjs'
 import { JWT } from 'next-auth/jwt'
-import { type Session } from 'next-auth'
-
-
-type ExtendedToken = JWT & { id: string; role?: string | null; banned?: boolean };
-type ExtendedUser = Session["user"] & { id: string; role?: string | null; banned?: boolean };
+import { Session, User } from 'next-auth'
 
 export const authOptions = {
   adapter: DrizzleAdapter(db),
@@ -55,15 +51,18 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: ExtendedToken; user?: ExtendedUser }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
-        token.id = user.id
-        token.role = user.role
-        token.banned = user.banned
+        return {
+          ...token,
+          id: user.id,
+          role: user.role || null,
+          banned: user.banned || false
+        }
       }
       return token
     },
-    async session({ session, token }: { session: Session; token: ExtendedToken }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user.id = token.id
         session.user.role = token.role
@@ -75,7 +74,7 @@ export const authOptions = {
   pages: {
     signIn: '/auth/sign-in',
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXT_AUTH_SECRET,
 }
 
 const handler = NextAuth(authOptions)
