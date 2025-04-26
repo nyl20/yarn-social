@@ -46,10 +46,7 @@ export default function ProfilePage() {
     const res = await fetch('/api/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...form,
-        tag: form.tag ? [form.tag.trim()] : [],
-      }),
+      body: JSON.stringify(form),
     })
 
     const data = await res.json()
