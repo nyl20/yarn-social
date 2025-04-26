@@ -7,25 +7,25 @@ import { db } from '@/database/db'
 import { useSession } from 'next-auth/react'
 
 // static data for patterns
-const patterns = [
-  { title: 'Cozy Winter Beanie', description: 'A warm beanie for chilly days.', author: 'Jane Doe', date: 'Apr 15, 2025', tags: ['pattern', 'clothes'], image: '/images/beanie.jpg', popularity: 20 },
-  { title: 'Crochet Teddy Bear', description: 'Perfect for gifting little ones.', author: 'Tom Yarn', date: 'Apr 10, 2025', tags: ['pattern', 'toys'], image: '/images/teddy.jpg', popularity: 50 },
-]
+// const patterns = [
+//   { title: 'Cozy Winter Beanie', description: 'A warm beanie for chilly days.', author: 'Jane Doe', date: 'Apr 15, 2025', tags: ['pattern', 'clothes'], image: '/images/beanie.jpg', popularity: 20 },
+//   { title: 'Crochet Teddy Bear', description: 'Perfect for gifting little ones.', author: 'Tom Yarn', date: 'Apr 10, 2025', tags: ['pattern', 'toys'], image: '/images/teddy.jpg', popularity: 50 },
+// ]
 
 // static data for shops
-const shops = [
-  { title: 'Yarny Delights', description: 'Find colorful, soft yarns.', author: 'Yarn Boutique', date: 'Apr 5, 2025', tags: ['shop', 'decoration'], image: '/images/shop1.webp', popularity: 15 },
-  { title: 'The Crochet Cave', description: 'Are you obsessive-compulsive? Then this is your paradise. We have everything you can think of.', author: 'YY', date: 'Apr 3, 2025', tags: ['shop'], image: '/images/shop2.webp', popularity: 35 },
-]
+// const shops = [
+//   { title: 'Yarny Delights', description: 'Find colorful, soft yarns.', author: 'Yarn Boutique', date: 'Apr 5, 2025', tags: ['shop', 'decoration'], image: '/images/shop1.webp', popularity: 15 },
+//   { title: 'The Crochet Cave', description: 'Are you obsessive-compulsive? Then this is your paradise. We have everything you can think of.', author: 'YY', date: 'Apr 3, 2025', tags: ['shop'], image: '/images/shop2.webp', popularity: 35 },
+// ]
 
-const dummyPosts = Array(20).fill({
-  image: '/images/teddy.jpg',
-  title: 'Post Title',
-  description: 'Sample text blablabla some random text to make it long. ',
-  author: 'Jane Doe',
-  date: 'Apr 20, 2025',
-  tags: ['pattern', 'toys'],
-})
+// const dummyPosts = Array(20).fill({
+//   image: '/images/teddy.jpg',
+//   title: 'Post Title',
+//   description: 'Sample text blablabla some random text to make it long. ',
+//   author: 'Jane Doe',
+//   date: 'Apr 20, 2025',
+//   tags: ['pattern', 'toys'],
+// })
 
 // const allPosts = [...patterns, ...shops, ...dummyPosts]
 
