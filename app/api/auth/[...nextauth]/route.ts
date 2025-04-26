@@ -6,7 +6,7 @@ import * as schema from '@/database/schema'
 import { eq } from 'drizzle-orm'
 import { compare } from 'bcryptjs'
 import { JWT } from 'next-auth/jwt'
-import { Session, User } from 'next-auth'
+// import { Session, User } from 'next-auth'
 
 export const authOptions = {
   adapter: DrizzleAdapter(db),
@@ -51,7 +51,7 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User }) {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
         return {
           ...token,
@@ -62,7 +62,7 @@ export const authOptions = {
       }
       return token
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session, token }: { session: any; token: JWT }) {
       if (token) {
         session.user.id = token.id
         session.user.role = token.role
