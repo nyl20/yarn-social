@@ -27,7 +27,7 @@ const dummyPosts = Array(20).fill({
   tags: ['pattern', 'toys'],
 })
 
-const allPosts = [...patterns, ...shops, ...dummyPosts]
+// const allPosts = [...patterns, ...shops, ...dummyPosts]
 
 type Post = {
   id: string
