@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
+import { boolean, pgTable, text, timestamp, uuid, integer } from "drizzle-orm/pg-core"
 
 import { users } from "./auth"
 import { relations } from "drizzle-orm"
@@ -17,7 +17,8 @@ export const posts = pgTable("posts", {
   category: text("category"),
   description: text("description"),
   image: text("image"),
-  tag: text("tag").array()
+  tag: text("tags").array(),
+  views: integer("views").notNull().default(0)
 })
 
 export const usersPostRelations = relations(users, ({ many }) => ({

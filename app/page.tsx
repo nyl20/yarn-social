@@ -6,6 +6,10 @@ import { db } from '@/database/db'
 import { useState, useEffect } from 'react'
 import { redirect } from "next/navigation"
 import { useRouter } from 'next/navigation'
+import { useSession } from "next-auth/react"
+import { NextResponse } from 'next/server'
+import { posts } from '@/database/schema/posts'
+import { eq, sql } from 'drizzle-orm'
 
 // static data for patterns
 // const patterns = [
@@ -30,6 +34,7 @@ type Post = {
   title: string
   category: string | null
   tag: string[] | null
+  views: number
   user: {
     name: string | null
     email: string | null
@@ -38,6 +43,7 @@ type Post = {
 
 
 export default function LandingPage() {
+  const { data: session } = useSession()
   const [patternPosts, setPatterns] = useState<Post[]>([])
   const [shopPosts, setShops] = useState<Post[]>([])
 
@@ -55,7 +61,8 @@ export default function LandingPage() {
                 email: true
               }
             }
-          }
+          },
+          orderBy: (posts, { desc }) => [desc(posts.views)]
         })
 
         // Fetch shops
@@ -69,8 +76,8 @@ export default function LandingPage() {
                 email: true
               }
             }
-          }
-          // orderBy: (posts, { desc }) => [desc(posts.createdAt)]
+          },
+          orderBy: (posts, { desc }) => [desc(posts.views)]
         })
 
         setPatterns(patternsData)
@@ -84,8 +91,25 @@ export default function LandingPage() {
   }, [])
 
   const router = useRouter()
-  const handlePostClick = () => {
-    router.push('/auth/sign-up')
+  const handlePostClick = async (postId: string) => {
+    if (!session) {
+      router.push('/auth/sign-in')
+    } else {
+      try {
+        console.log(postId)
+        await fetch('/api/posts/views', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ postId }),
+        })
+        router.push('/posts')
+      } catch (error) {
+        console.error('Error updating views:', error)
+      }
+    }
+
   }
   return (
     <div>
@@ -107,7 +131,7 @@ export default function LandingPage() {
         <div className="flex gap-4 overflow-x-auto pb-4 px-6">
           {patternPosts.map((post, idx) => (
             <button key={idx}
-              onClick={handlePostClick}
+              onClick={() => handlePostClick(post.id)}
               className="hover:opacity-80 transition-opacity"
             >
               <PostCard
@@ -133,7 +157,7 @@ export default function LandingPage() {
         <div className="flex gap-4 overflow-x-auto pb-4 px-6">
           {shopPosts.map((post, idx) => (
             <button key={idx}
-              onClick={handlePostClick}
+              onClick={() => handlePostClick(post.id)}
               className="hover:opacity-80 transition-opacity"
             >
               <PostCard
