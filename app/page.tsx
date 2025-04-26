@@ -29,7 +29,7 @@ type Post = {
   description: string | null
   title: string
   category: string | null
-  tag: string | null
+  tag: string[] | null
   user: {
     name: string | null
     email: string | null
@@ -117,7 +117,7 @@ export default function LandingPage() {
                 }
                 author={post.user.name || ''}
                 date={post.createdAt.toString()}
-                tags={[]}
+                tags={post.tag || []}
                 image={post.image || ''}
               />
             </button>
@@ -143,7 +143,7 @@ export default function LandingPage() {
                 }
                 author={post.user.name || ''}
                 date={post.createdAt.toString()}
-                tags={[]}
+                tags={post.tag || []}
                 image={post.image || ''}
               />
             </button>
