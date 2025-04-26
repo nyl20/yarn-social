@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import PostCard from '@/components/PostCard'
-import { db } from '@/database/db'
 import { useSession } from 'next-auth/react'
 
 // static data for patterns
@@ -60,18 +59,8 @@ export default function Posts() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // Fetch patterns
-        const postsData = await db.query.posts.findMany({
-          limit: 20,
-          with: {
-            user: {
-              columns: {
-                name: true,
-                email: true
-              }
-            }
-          }
-        })
+        const res = await fetch('/api/posts')
+        const postsData = await res.json()
         setPosts(postsData)
       } catch (error) {
         console.error('Error fetching posts:', error)

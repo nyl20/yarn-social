@@ -35,3 +35,25 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ success: true })
 }
+
+
+export async function GET() {
+  try {
+    const postsData = await db.query.posts.findMany({
+      limit: 20,
+      with: {
+        user: {
+          columns: {
+            name: true,
+            email: true
+          }
+        }
+      }
+    })
+    return NextResponse.json(postsData)
+  } catch (error) {
+    console.error('Error fetching posts:', error)
+    return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })
+  }
+}
+
