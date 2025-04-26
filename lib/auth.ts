@@ -1,4 +1,3 @@
-import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { DrizzleAdapter } from '@auth/drizzle-adapter'
 import { db } from '@/database/db'
