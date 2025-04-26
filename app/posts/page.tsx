@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 // Posts page
 export default function Posts() {
   return (

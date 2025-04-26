@@ -4,7 +4,6 @@ import { authOptions } from '../auth/[...nextauth]/route'
 import { db } from '@/database/db'
 import { posts } from '@/database/schema/posts'
 import { insertPostSchema } from '@/database/schema/posts'
-import { z } from 'zod'
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)

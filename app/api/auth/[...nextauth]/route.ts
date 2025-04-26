@@ -8,12 +8,13 @@ import { compare } from 'bcryptjs'
 import { JWT } from 'next-auth/jwt'
 import { Session } from 'next-auth'
 import { User } from 'next-auth'
+import { AuthOptions } from 'next-auth'
 
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   adapter: DrizzleAdapter(db),
   session: {
-    strategy: 'jwt' as 'jwt',
+    strategy: 'jwt',
   },
   providers: [
     CredentialsProvider({
