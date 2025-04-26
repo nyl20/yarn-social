@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
+import { boolean, pgTable, text, timestamp, uuid, integer } from "drizzle-orm/pg-core"
 
 import { users } from "./auth"
 import { relations } from "drizzle-orm"
@@ -14,13 +14,14 @@ export const posts = pgTable("posts", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  category: text("type"),
+  category: text("category"),
   description: text("description"),
   image: text("image"),
-  tag: text("tag")
+  tag: text("tags").array(),
+  views: integer("views").notNull().default(0)
 })
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersPostRelations = relations(users, ({ many }) => ({
   profiles: many(posts),
 }))
 
@@ -32,11 +33,11 @@ export const postsRelations = relations(posts, ({ one }) => ({
 }))
 
 
-export const selectUserSchema = createSelectSchema(users);
-export type User = z.infer<typeof selectUserSchema>;
+// export const selectUserSchema = createSelectSchema(users);
+// export type User = z.infer<typeof selectUserSchema>;
 
 export const selectPostSchema = createSelectSchema(posts);
-export type Todo = z.infer<typeof selectPostSchema>;
+export type Post = z.infer<typeof selectPostSchema>;
 
 export const insertPostSchema = createInsertSchema(posts, {
   title: z.string().nonempty("Title cannot be empty"),

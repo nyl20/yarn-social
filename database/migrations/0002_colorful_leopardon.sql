@@ -1,0 +1,1 @@
+ALTER TABLE "posts" ALTER COLUMN "tag" SET DATA TYPE text[];
