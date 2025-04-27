@@ -72,8 +72,8 @@ export default function Posts() {
 
   const filteredPosts = allPosts
     .filter(post => {
-      const matchesCategory = category === 'All' || (post.category && post.category == (category.toLowerCase()))
-      const matchesStyle = style === 'All' || (post.tag && post.tag.includes(style.toLowerCase()))
+      const matchesCategory = category === 'All' || (post.category && post.category == category)
+      const matchesStyle = style === 'All' || (post.tag && post.tag.includes(style))
       const matchesSearch =
         search === '' ||
         post.title.toLowerCase().includes(search.toLowerCase()) ||
