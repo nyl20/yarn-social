@@ -72,8 +72,8 @@ export default function Posts() {
 
   const filteredPosts = allPosts
     .filter(post => {
-      const matchesCategory = category === 'All' || (post.category && post.category == (category.toLowerCase()))
-      const matchesStyle = style === 'All' || (post.tag && post.tag.includes(style.toLowerCase()))
+      const matchesCategory = category === 'All' || (post.category && post.category == category)
+      const matchesStyle = style === 'All' || (post.tag && post.tag.includes(style))
       const matchesSearch =
         search === '' ||
         post.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -145,8 +145,8 @@ export default function Posts() {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="All">Category</option>
-          <option value="pattern">Pattern</option>
-          <option value="shop">Shop</option>
+          <option value="Pattern">Pattern</option>
+          <option value="Shop">Shop</option>
         </select>
 
         <select
@@ -155,9 +155,9 @@ export default function Posts() {
           onChange={(e) => setStyle(e.target.value)}
         >
           <option value="All">Style</option>
-          <option value="clothes">Clothes</option>
-          <option value="toys">Toys</option>
-          <option value="decorations">Decorations</option>
+          <option value="Clothes">Clothes</option>
+          <option value="Toys">Toys</option>
+          <option value="Decorations">Decorations</option>
         </select>
 
         <select

@@ -30,4 +30,4 @@ export async function GET(req: NextRequest) {
     console.error(error);
     return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })
   }
-}
+} 
