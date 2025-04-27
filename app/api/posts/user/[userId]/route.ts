@@ -22,6 +22,7 @@ export async function GET(req: NextRequest, context: { params: { userId: string 
 
     return NextResponse.json({ posts: userPosts })
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })
   }
 }

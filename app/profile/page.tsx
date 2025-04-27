@@ -18,10 +18,21 @@ export default function ProfilePage() {
     tag: '',
   })
 
+  type Post = {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    category: string;
+    tag: string[];
+    updatedAt: string;
+    userName: string;
+  };
+
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-  const [posts, setPosts] = useState<any[]>([])
+  const [posts, setPosts] = useState<Post[]>([])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
