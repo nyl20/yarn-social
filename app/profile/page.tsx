@@ -105,7 +105,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#4497B7] pb-10">
       <div className="mx-20 items-center">
         <div className="py-5 flex justify-between items-center">
-          <h1 className="text-3xl font-semibold">
+          <h1 className="text-3xl font-semibold text-white">
             Welcome, {session?.user?.name}
           </h1>
 
@@ -195,9 +195,9 @@ export default function ProfilePage() {
         </div>
 
         <div className="w-full">
-          <h2 className="text-2xl font-semibold py-5">Your Posts</h2>
+          <h2 className="text-2xl font-semibold py-5 text-white">Your Posts</h2>
           {posts.length === 0 ? (
-            <p>No posts yet.</p>
+            <p className="text-white">No posts yet.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map(post => (
