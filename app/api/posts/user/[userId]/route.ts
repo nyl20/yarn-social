@@ -5,9 +5,12 @@ import { eq } from 'drizzle-orm'
 import { NextRequest, NextResponse } from 'next/server'
 
 
-export async function GET(req: NextRequest, { params }: { params: Record<string, string> }) {
+export async function GET(req: NextRequest) {
   try {
-    const userId = params.userId;
+    const url = new URL(req.url);
+    const pathParts = url.pathname.split('/');
+    const userId = pathParts[pathParts.length - 1];
+
     const userPosts = await db
     .select({
         id: posts.id,
