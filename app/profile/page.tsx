@@ -25,7 +25,7 @@ export default function ProfilePage() {
     image: string;
     category: string;
     tag: string[];
-    updatedAt: string;
+    updatedAt: Date;
     userName: string;
   };
 
@@ -154,24 +154,24 @@ export default function ProfilePage() {
                     <option value="Clothes">Clothes</option>
                     <option value="Toys">Toys</option>
                   </select>
-                  <div className = "my-2">
+                  <div className="my-2">
                     {/* Customize the image upload button */}
-                  <label
-                    htmlFor="imageUpload"
-                    className="w-full border border-black text-black px-2 py-2 rounded"
-                  >
-                    Upload Image
-                  </label>
+                    <label
+                      htmlFor="imageUpload"
+                      className="w-full border border-black text-black px-2 py-2 rounded"
+                    >
+                      Upload Image
+                    </label>
 
-                  {/* Hide the original image upload button */}
-                  <input
-                    id="imageUpload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                </div>
+                    {/* Hide the original image upload button */}
+                    <input
+                      id="imageUpload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </div>
 
                   {preview && (
                     <img
@@ -194,26 +194,26 @@ export default function ProfilePage() {
           )}
         </div>
 
-      <div className="w-full">
-        <h2 className="text-2xl font-semibold py-5">Your Posts</h2>
+        <div className="w-full">
+          <h2 className="text-2xl font-semibold py-5">Your Posts</h2>
           {posts.length === 0 ? (
             <p>No posts yet.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map(post => (
-              <PostCard
-                key={post.id}
-                title={post.title}
-                description={post.description || ''}
-                author={post.userName || ''}
-                date={post.updatedAt.toString()}
-                tags={post.tag || []}
-                image={post.image || ''}
-              />
-            ))}
-          </div>)}
+              {posts.map(post => (
+                <PostCard
+                  key={post.id}
+                  title={post.title}
+                  description={post.description || ''}
+                  author={post.userName || ''}
+                  date={post.updatedAt}
+                  tags={post.tag || []}
+                  image={post.image || ''}
+                />
+              ))}
+            </div>)}
+        </div>
       </div>
     </div>
-  </div>
   )
 }

@@ -136,7 +136,7 @@ export default function LandingPage() {
                 description={post.description || ''
                 }
                 author={post.user.name || ''}
-                date={post.createdAt.toString()}
+                date={post.createdAt}
                 tags={post.tag || []}
                 image={post.image || ''}
               />
@@ -162,7 +162,7 @@ export default function LandingPage() {
                 description={post.description || ''
                 }
                 author={post.user.name || ''}
-                date={post.createdAt.toString()}
+                date={post.createdAt}
                 tags={post.tag || []}
                 image={post.image || ''}
               />
