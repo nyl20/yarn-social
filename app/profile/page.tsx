@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import PostCard from '@/components/PostCard'
 
 export default function ProfilePage() {
   const { data: session } = useSession()
@@ -17,9 +18,21 @@ export default function ProfilePage() {
     tag: '',
   })
 
+  type Post = {
+    id: string;
+    title: string;
+    description: string;
+    image: string;
+    category: string;
+    tag: string[];
+    updatedAt: string;
+    userName: string;
+  };
+
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [posts, setPosts] = useState<Post[]>([])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -37,6 +50,24 @@ export default function ProfilePage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
+
+  const fetchPosts = async () => {
+    if (!session?.user?.id) return
+
+    const res = await fetch(`/api/posts/user/${session.user.id}`)
+    const data = await res.json()
+
+    if (res.ok) {
+      setPosts(data.posts)
+    } else {
+      console.error(data.error || 'Failed to fetch posts')
+    }
+  }
+
+  useEffect(() => {
+    fetchPosts()
+  }, [session])
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,6 +93,7 @@ export default function ProfilePage() {
     setSuccess(true)
     setForm({ title: '', description: '', category: '', image: '', tag: '' })
     setPreview(null)
+    await fetchPosts()
     setTimeout(() => {
       setSuccess(false)
       setShowModal(false)
@@ -70,94 +102,118 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="mx-20 my-5 space-y-6 flex justify-between items-center">
-      <h1 className="text-3xl font-semibold">
-        Welcome, {session?.user?.name}
-      </h1>
+    <div className="min-h-screen bg-[#4497B7] pb-10">
+      <div className="mx-20 items-center">
+        <div className="py-5 flex justify-between items-center">
+          <h1 className="text-3xl font-semibold">
+            Welcome, {session?.user?.name}
+          </h1>
 
-      <button
-        onClick={() => setShowModal(true)}
-        className="bg-[#4497B7] text-white px-4 py-2 rounded hover:bg-[#417e96]"
-      >
-        + Create A New Post
-      </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="border-2 rounded px-4 py-2 bg-white shadow"
+          >
+            + Create A New Post
+          </button>
 
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 rounded shadow-lg relative">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
-            >
-              ×
-            </button>
-            <h2 className="my-4 text-xl">Create a New Post</h2>
+          {showModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 rounded shadow-lg relative">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+                >
+                  ×
+                </button>
+                <h2 className="my-4 text-xl">Create a New Post</h2>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <input name="title" placeholder="Title" value={form.title} onChange={handleChange} className="w-full p-2 border rounded" required />
-              <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} className="w-full p-2 border rounded h-24" />
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                required
-              >
-                <option value="">Select a category</option>
-                <option value="Pattern">Pattern</option>
-                <option value="Shop">Shop</option>
-              </select>
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <input name="title" placeholder="Title" value={form.title} onChange={handleChange} className="w-full p-2 border rounded" required />
+                  <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} className="w-full p-2 border rounded h-24" />
+                  <select
+                    name="category"
+                    value={form.category}
+                    onChange={handleChange}
+                    className="w-full border p-2 rounded"
+                    required
+                  >
+                    <option value="">Select a category</option>
+                    <option value="Pattern">Pattern</option>
+                    <option value="Shop">Shop</option>
+                  </select>
 
-              <select
-                name="tag"
-                value={form.tag}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                required
-              >
-                <option value="">Select a tag</option>
-                <option value="Decorations">Decorations</option>
-                <option value="Clothes">Clothes</option>
-                <option value="Toys">Toys</option>
-              </select>
-              <div className = "my-2">
-                {/* Customize the image upload button */}
-              <label
-                htmlFor="imageUpload"
-                className="w-full border border-black text-black px-2 py-2 rounded"
-              >
-                Upload Image
-              </label>
+                  <select
+                    name="tag"
+                    value={form.tag}
+                    onChange={handleChange}
+                    className="w-full border p-2 rounded"
+                    required
+                  >
+                    <option value="">Select a tag</option>
+                    <option value="Decorations">Decorations</option>
+                    <option value="Clothes">Clothes</option>
+                    <option value="Toys">Toys</option>
+                  </select>
+                  <div className = "my-2">
+                    {/* Customize the image upload button */}
+                  <label
+                    htmlFor="imageUpload"
+                    className="w-full border border-black text-black px-2 py-2 rounded"
+                  >
+                    Upload Image
+                  </label>
 
-              {/* Hide the original image upload button */}
-              <input
-                id="imageUpload"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-              />
+                  {/* Hide the original image upload button */}
+                  <input
+                    id="imageUpload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </div>
+
+                  {preview && (
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="w-50 h-50 rounded"
+                    />
+                  )}
+                  {error && <p className="text-red-600 text-sm">{error}</p>}
+                  {success && (
+                    <p className="text-green-600 text-sm text-center">Post created!</p>
+                  )}
+
+                  <button type="submit" className="my-4 bg-[#4497B7] text-white px-4 py-2 rounded hover:bg-[#417e96] w-full">
+                    Post
+                  </button>
+                </form>
+              </div>
             </div>
-
-              {preview && (
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="w-50 h-50 rounded"
-                />
-              )}
-              {error && <p className="text-red-600 text-sm">{error}</p>}
-              {success && (
-                <p className="text-green-600 text-sm text-center">Post created!</p>
-              )}
-
-              <button type="submit" className="my-4 bg-[#4497B7] text-white px-4 py-2 rounded hover:bg-[#417e96] w-full">
-                Post
-              </button>
-            </form>
-          </div>
+          )}
         </div>
-      )}
+
+      <div className="w-full">
+        <h2 className="text-2xl font-semibold py-5">Your Posts</h2>
+          {posts.length === 0 ? (
+            <p>No posts yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map(post => (
+              <PostCard
+                key={post.id}
+                title={post.title}
+                description={post.description || ''}
+                author={post.userName || ''}
+                date={post.updatedAt.toString()}
+                tags={post.tag || []}
+                image={post.image || ''}
+              />
+            ))}
+          </div>)}
+      </div>
     </div>
+  </div>
   )
 }
