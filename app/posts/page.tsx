@@ -72,7 +72,7 @@ export default function Posts() {
 
   const filteredPosts = allPosts
     .filter(post => {
-      const matchesCategory = category === 'All' || (post.tag && post.tag.includes(category.toLowerCase()))
+      const matchesCategory = category === 'All' || (post.category && post.category == (category.toLowerCase()))
       const matchesStyle = style === 'All' || (post.tag && post.tag.includes(style.toLowerCase()))
       const matchesSearch =
         search === '' ||
@@ -157,7 +157,7 @@ export default function Posts() {
           <option value="All">Style</option>
           <option value="clothes">Clothes</option>
           <option value="toys">Toys</option>
-          <option value="decoration">Decoration</option>
+          <option value="decorations">Decorations</option>
         </select>
 
         <select
