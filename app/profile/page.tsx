@@ -194,12 +194,41 @@ export default function ProfilePage() {
           )}
         </div>
 
+          {/* User Profile Card with Dummy Data */}
+          <div className="flex items-center gap-8 bg-white rounded-2xl shadow-md p-6 my-8">
+          <div className="flex-shrink-0">
+            <img
+              src="/images/default_profile.jpg"
+              alt="Profile"
+              className="w-32 h-32 rounded-full object-cover border-4 border-[#4497B7]"
+            />
+          </div>
+
+          <div className="flex flex-col space-y-2">
+            <h2 className="text-3xl font-extrabold text-[#4497B7] tracking-wide">Jane Yarnlover</h2>
+            <p className="text-gray-600">
+              <span className="font-semibold">Identity:</span> Individual
+            </p>
+            <p className="text-gray-600">
+              <span className="font-semibold">Bio:</span> Passionate about crochet and all things cozy. 🌸
+            </p>
+            <a
+              href="https://janeyarnlover.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#4497B7] hover:underline"
+            >
+              https://janeyarnlover.com
+            </a>
+          </div>
+        </div>
+
         <div className="w-full">
           <h2 className="text-2xl font-semibold py-5 text-white">Your Posts</h2>
           {posts.length === 0 ? (
             <p className="text-white">No posts yet.</p>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 px-6">
               {posts.map(post => (
                 <PostCard
                   key={post.id}
