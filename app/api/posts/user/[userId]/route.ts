@@ -4,7 +4,7 @@ import { users } from "@/database/schema/auth"
 import { eq } from 'drizzle-orm'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(req: NextRequest, context: { params: { userId: string } }) {
+export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
   try {
     const userPosts = await db
     .select({
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, context: { params: { userId: string 
         userName: users.name,})
       .from(posts)
       .innerJoin(users, eq(posts.userId, users.id))
-      .where(eq(posts.userId, context.params.userId))
+      .where(eq(posts.userId, params.userId))
 
     return NextResponse.json({ posts: userPosts })
   } catch (error) {
