@@ -5,9 +5,9 @@ import { eq } from 'drizzle-orm'
 import { NextRequest, NextResponse } from 'next/server'
 
 
-export async function GET(req: NextRequest, { params }: any ){
+export async function GET(req: NextRequest, { params }: { params: Record<string, string> }) {
   try {
-    const { userId } = params;
+    const userId = params.userId;
     const userPosts = await db
     .select({
         id: posts.id,
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest, { params }: any ){
         userName: users.name,})
       .from(posts)
       .innerJoin(users, eq(posts.userId, users.id))
-      .where(eq(posts.userId, users.id))
+      .where(eq(posts.userId, userId))
 
     return NextResponse.json({ posts: userPosts })
   } catch (error) {
