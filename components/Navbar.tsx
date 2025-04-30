@@ -2,18 +2,20 @@
 
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
   const { data: session } = useSession()
+  const pathname = usePathname()
 
   return (
     <nav className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-white shadow-sm font-sans">
       <div className="flex items-center gap-6 text-[#333] font-bold">
         <span className="text-2xl">🧶</span>
-        <Link href="/" className="hover:text-[#4497B7] transition">Home</Link>
-        <Link href="/posts" className="hover:text-[#4497B7] transition">Posts</Link>
+        <Link href="/" className={`hover:text-[#4497B7] transition ${pathname === '/' ? 'text-[#4497B7]' : ''}`}>Home</Link>
+        <Link href="/posts" className={`hover:text-[#4497B7] transition ${pathname === '/posts' ? 'text-[#4497B7]' : ''}`}>Posts</Link>
         {session?.user && (
-          <Link href="/profile" className="hover:text-[#4497B7] transition">Profile</Link>
+          <Link href="/profile" className={`hover:text-[#4497B7] transition ${pathname === '/profile' ? 'text-[#4497B7]' : ''}`}>Profile</Link>
         )}
       </div>
 
