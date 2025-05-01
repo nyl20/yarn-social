@@ -69,7 +69,6 @@ export default function ProfilePage() {
 
     const res = await fetch(`/api/profiles?userId=${session.user.id}`)
     const data = await res.json()
-    console.log(data)
 
     if (res.ok) {
       console.log('setting profile data')
@@ -234,7 +233,7 @@ export default function ProfilePage() {
           />
 
           {/* Username */}
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">{profile?.username || '...'}</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">{profile?.username || session?.user?.name}</h2>
 
           {/* Identity badge (Show one of them*/}
           {
@@ -251,7 +250,7 @@ export default function ProfilePage() {
 
           {/* Bio */}
           <p className="text-sm sm:text-base text-gray-200 max-w-md">
-            <span className="font-semibold text-white">Bio:</span> {profile?.bio || 'No bio available'}
+            <span className="font-semibold text-white">Bio:</span> {profile?.bio || 'No bio written yet'}
           </p>
 
           {/* Website */}
