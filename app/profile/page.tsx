@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import PostCard from '@/components/PostCard'
+import PostCardProfile from '@/components/PostCardProfile'
 
 export default function ProfilePage() {
   const { data: session } = useSession()
@@ -228,9 +228,9 @@ export default function ProfilePage() {
           {posts.length === 0 ? (
             <p className="text-white">No posts yet.</p>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-6">
               {posts.map(post => (
-                <PostCard
+                <PostCardProfile
                   key={post.id}
                   id={post.id}
                   title={post.title}
