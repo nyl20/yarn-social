@@ -113,7 +113,7 @@ export default function ProfilePage() {
 
           <button
             onClick={() => setShowModal(true)}
-            className="border-2 rounded px-4 py-2 bg-white shadow"
+            className="text-black font-semibold border-2 rounded-full px-4 py-2 bg-white shadow"
           >
             + Create A New Post
           </button>
@@ -243,13 +243,13 @@ export default function ProfilePage() {
               </button>
 
               {showEdit && (
-                <div className="absolute right-0 mt-2 bg-white border-2 border-[#4497B7] rounded shadow-lg z-50">
+                <div className="absolute right-0 mt-2 bg-white border-2 border-black rounded shadow-lg z-50">
                   <button
                     onClick={() => {
                       setShowEdit(false)
                       // enable edit feature ...
                     }}
-                    className="px-4 py-2 text-sm text-[#4497B7] hover:bg-gray-100 w-full text-left font-medium"
+                    className="px-4 py-2 text-sm text-black hover:bg-gray-100 w-full text-left font-medium"
                   >
                     Edit
                   </button>
