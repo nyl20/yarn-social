@@ -113,7 +113,7 @@ export default function ProfilePage() {
 
           <button
             onClick={() => setShowModal(true)}
-            className="text-black font-semibold border-2 rounded-full px-4 py-2 bg-white shadow"
+            className="text-black font-semibold border-2 rounded-full px-4 py-2 bg-white shadow cursor-pointer"
           >
             + Create A New Post
           </button>
@@ -237,7 +237,7 @@ export default function ProfilePage() {
             <div className="absolute top-0 right-0 sm:right-8">
               <button
                 onClick={() => setShowEdit(prev => !prev)}
-                className="p-2 hover:bg-white/10 rounded-full border-2"
+                className="p-2 hover:bg-white/10 rounded-full border-2 cursor-pointer"
               >
                 <Pencil className="w-5 h-5 text-white" />
               </button>
