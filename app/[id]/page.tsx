@@ -1,9 +1,9 @@
 'use client'
 
-// import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function PostPage() {
-  // const router = useRouter()
+  const router = useRouter()
 
   const post = {
     id: '1',
@@ -18,13 +18,13 @@ export default function PostPage() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-white p-6">
-      {/*
-      <button onClick={() => router.back()} className="bg-[#4497B7] text-white px-4 py-2 rounded shadow hover:opacity-90 mb-6">
-        ← Back
-      </button>
-      */}
-
-      <h1 className="text-3xl font-semibold mb-2">{post.title}</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-semibold mb-2">{post.title}</h1>
+        <button onClick={() => router.back()} className="bg-[#4497B7] text-white px-4 py-2 rounded shadow hover:opacity-90 mb-6">
+          ← Back
+        </button>
+      </div>
+      
       <p className="text-gray-400 mb-4">
         by <span className="text-white">{post.author}</span> · {post.date}
       </p>

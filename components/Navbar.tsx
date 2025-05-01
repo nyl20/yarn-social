@@ -17,6 +17,7 @@ export default function Navbar() {
         {session?.user && (
           <Link href="/profile" className={`hover:text-[#4497B7] transition ${pathname === '/profile' ? 'text-[#4497B7]' : ''}`}>Profile</Link>
         )}
+        {pathname === '/[id]' && (<Link href="/[id]" className="text-[#4497B7]">Detailed Post</Link>)}
       </div>
 
       <div className="flex gap-4 items-center">
