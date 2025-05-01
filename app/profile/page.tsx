@@ -31,10 +31,21 @@ export default function ProfilePage() {
     userName: string;
   };
 
+  type Profile = {
+    id: string;
+    username: string;
+    bio: string;
+    completed: boolean;
+    image: string;
+    type: string;
+    url: string;
+  }
+
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [posts, setPosts] = useState<Post[]>([])
+  const [profile, setProfile] = useState<Profile | null>(null)
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -53,6 +64,21 @@ export default function ProfilePage() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
+  const fetchProfile = async () => {
+    if (!session?.user?.id) return
+
+    const res = await fetch(`/api/profiles?userId=${session.user.id}`)
+    const data = await res.json()
+    console.log(data)
+
+    if (res.ok) {
+      console.log('setting profile data')
+      setProfile(data)
+    } else {
+      console.error(data.error || 'Failed to fetch posts')
+    }
+  }
+
   const fetchPosts = async () => {
     if (!session?.user?.id) return
 
@@ -68,6 +94,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     fetchPosts()
+    fetchProfile()
+    console.log(profile)
   }, [session])
 
 
@@ -196,67 +224,70 @@ export default function ProfilePage() {
           )}
         </div>
 
-          {/* User Profile Card with Dummy Data */}
-          <div className="flex flex-col items-center text-center space-y-4 my-10 relative text-white">
-            {/* Profile Image */}
-            <img
-              src="/images/profile_sample.jpg"
-              alt="Profile"
-              className="w-32 h-32 rounded-full object-cover border-4 border-white"
-            />
+        {/* User Profile Card with Dummy Data */}
+        <div className="flex flex-col items-center text-center space-y-4 my-10 relative text-white">
+          {/* Profile Image */}
+          <img
+            src={profile?.image || "/images/profile_sample.jpg"}
+            alt="Profile"
+            className="w-32 h-32 rounded-full object-cover border-4 border-white"
+          />
 
-            {/* Username */}
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Grace G</h2>
+          {/* Username */}
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">{profile?.username || '...'}</h2>
 
-            {/* Identity badge (Show one of them*/}
-            {/* Individual */}
-            <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
-              🧵 Individual Crafter
-            </div>
-            {/* Shop
-            <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
-              🏪 Shop
-            </div> */}
+          {/* Identity badge (Show one of them*/}
+          {
+            profile?.type === 'shop' ? (
+              <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
+                🏪 Shop
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
+                🧵 Individual Crafter
+              </div>
+            )
+          }
 
-            {/* Bio */}
-            <p className="text-sm sm:text-base text-gray-200 max-w-md">
-              <span className="font-semibold text-white">Bio:</span> Yeah! Full of passion for crafting!
-            </p>
+          {/* Bio */}
+          <p className="text-sm sm:text-base text-gray-200 max-w-md">
+            <span className="font-semibold text-white">Bio:</span> {profile?.bio || 'No bio available'}
+          </p>
 
-            {/* Website */}
-            <a
-              href="https://doublegg.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[F9E6D1] hover:text-cyan-300 text-sm underline"
+          {/* Website */}
+          <a
+            href={profile?.url || ''}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[F9E6D1] hover:text-cyan-300 text-sm underline"
+          >
+            {profile?.url || ''}
+          </a>
+
+          {/* Edit Button */}
+          <div className="absolute top-0 right-0 sm:right-8">
+            <button
+              onClick={() => setShowEdit(prev => !prev)}
+              className="p-2 hover:bg-white/10 rounded-full border-2 cursor-pointer"
             >
-              https://doublegg.com
-            </a>
+              <Pencil className="w-5 h-5 text-white" />
+            </button>
 
-            {/* Edit Button */}
-            <div className="absolute top-0 right-0 sm:right-8">
-              <button
-                onClick={() => setShowEdit(prev => !prev)}
-                className="p-2 hover:bg-white/10 rounded-full border-2 cursor-pointer"
-              >
-                <Pencil className="w-5 h-5 text-white" />
-              </button>
-
-              {showEdit && (
-                <div className="absolute right-0 mt-2 bg-white border-2 border-black rounded shadow-lg z-50">
-                  <button
-                    onClick={() => {
-                      setShowEdit(false)
-                      // enable edit feature ...
-                    }}
-                    className="px-4 py-2 text-sm text-black hover:bg-gray-100 w-full text-left font-medium"
-                  >
-                    Edit
-                  </button>
-                </div>
-              )}
-            </div>
+            {showEdit && (
+              <div className="absolute right-0 mt-2 bg-white border-2 border-black rounded shadow-lg z-50">
+                <button
+                  onClick={() => {
+                    setShowEdit(false)
+                    // enable edit feature ...
+                  }}
+                  className="px-4 py-2 text-sm text-black hover:bg-gray-100 w-full text-left font-medium"
+                >
+                  Edit
+                </button>
+              </div>
+            )}
           </div>
+        </div>
 
         <div className="w-full">
           <h2 className="text-2xl font-semibold py-5 text-white">Your Posts</h2>
