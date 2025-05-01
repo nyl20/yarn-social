@@ -181,7 +181,7 @@ export default function Posts() {
       </div>
 
       <div className="w-full flex justify-center">
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-x-8 gap-y-10 px-6 max-w-[1400px] w-full place-items-center">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8 px-6 max-w-[1400px] w-full place-items-center">
         {filteredPosts.map((post, idx) => (
           <button
             key={idx}

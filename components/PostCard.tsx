@@ -15,7 +15,7 @@ type Props = {
 export default function PostCard({ id, title, description, author, date, tags, image }: Props) {
   return (
     <Link href={`/${id}`} className="block cursor-pointer">
-      <div className="w-[300px] h-[300px] bg-white shadow rounded-xl overflow-hidden flex flex-col">
+      <div className="w-full aspect-[3/4] bg-white shadow rounded-xl overflow-hidden flex flex-col max-w-[280px]">
         <div className="relative w-full h-[250px]">
           <Image src={image} alt={title} fill className="object-cover" />
         </div>
