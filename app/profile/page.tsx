@@ -97,6 +97,11 @@ export default function ProfilePage() {
     console.log(profile)
   }, [session])
 
+  const handlePostDelete = (deletedPostId: string) => {
+    // Update posts state to remove the deleted post
+    setPosts(currentPosts => currentPosts.filter(post => post.id !== deletedPostId))
+  }
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -304,6 +309,7 @@ export default function ProfilePage() {
                   date={post.updatedAt}
                   tags={post.tag || []}
                   image={post.image || ''}
+                  onDelete={handlePostDelete}
                 />
               ))}
             </div>)}
