@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import PostCardProfile from '@/components/PostCardProfile'
+import { Pencil } from 'lucide-react'
 
 export default function ProfilePage() {
   const { data: session } = useSession()
   const router = useRouter()
+  const [showEdit, setShowEdit] = useState(false)
 
   const [showModal, setShowModal] = useState(false)
   const [form, setForm] = useState({
@@ -195,33 +197,66 @@ export default function ProfilePage() {
         </div>
 
           {/* User Profile Card with Dummy Data */}
-          <div className="flex items-center gap-8 bg-white rounded-2xl shadow-md p-6 my-8">
-          <div className="flex-shrink-0">
+          <div className="flex flex-col items-center text-center space-y-4 my-10 relative text-white">
+            {/* Profile Image */}
             <img
-              src="/images/default_profile.jpg"
+              src="/images/profile_sample.jpg"
               alt="Profile"
-              className="w-32 h-32 rounded-full object-cover border-4 border-[#4497B7]"
+              className="w-32 h-32 rounded-full object-cover border-4 border-white"
             />
-          </div>
 
-          <div className="flex flex-col space-y-2">
-            <h2 className="text-3xl font-extrabold text-[#4497B7] tracking-wide">Jane Yarnlover</h2>
-            <p className="text-gray-600">
-              <span className="font-semibold">Identity:</span> Individual
+            {/* Username */}
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Grace G</h2>
+
+            {/* Identity badge (Show one of them*/}
+            {/* Individual */}
+            <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
+              🧵 Individual Crafter
+            </div>
+            {/* Shop
+            <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
+              🏪 Shop
+            </div> */}
+
+            {/* Bio */}
+            <p className="text-sm sm:text-base text-gray-200 max-w-md">
+              <span className="font-semibold text-white">Bio:</span> Yeah! Full of passion for crafting!
             </p>
-            <p className="text-gray-600">
-              <span className="font-semibold">Bio:</span> Passionate about crochet and all things cozy. 🌸
-            </p>
+
+            {/* Website */}
             <a
-              href="https://janeyarnlover.com"
+              href="https://doublegg.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#4497B7] hover:underline"
+              className="text-[F9E6D1] hover:text-cyan-300 text-sm underline"
             >
-              https://janeyarnlover.com
+              https://doublegg.com
             </a>
+
+            {/* Edit Button */}
+            <div className="absolute top-0 right-0 sm:right-8">
+              <button
+                onClick={() => setShowEdit(prev => !prev)}
+                className="p-2 hover:bg-white/10 rounded-full border-2"
+              >
+                <Pencil className="w-5 h-5 text-white" />
+              </button>
+
+              {showEdit && (
+                <div className="absolute right-0 mt-2 bg-white border-2 border-[#4497B7] rounded shadow-lg z-50">
+                  <button
+                    onClick={() => {
+                      setShowEdit(false)
+                      // enable edit feature ...
+                    }}
+                    className="px-4 py-2 text-sm text-[#4497B7] hover:bg-gray-100 w-full text-left font-medium"
+                  >
+                    Edit
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
         <div className="w-full">
           <h2 className="text-2xl font-semibold py-5 text-white">Your Posts</h2>
