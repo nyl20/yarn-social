@@ -5,11 +5,12 @@ import { eq } from 'drizzle-orm'
 import { NextRequest, NextResponse } from 'next/server'
 
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest) {
+  // , { params }: { params: { id: string } }
   try {
-    // const url = new URL(req.url);
-    // const pathParts = url.pathname.split('/');
-    // const userId = pathParts[pathParts.length - 1];
+    const url = new URL(req.url);
+    const pathParts = url.pathname.split('/');
+    const postId = pathParts[pathParts.length - 1];
 
     const post = await db
       .select({
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       })
       .from(posts)
       .innerJoin(users, eq(posts.userId, users.id))
-      .where(eq(posts.id, params.id))
+      .where(eq(posts.id, postId))
 
     return NextResponse.json(post)
   } catch (error) {
