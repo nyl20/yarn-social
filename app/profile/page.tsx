@@ -104,7 +104,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#4497B7] pb-10">
+    <div className="min-h-screen bg-[#4497B7]">
       <div className="mx-20 items-center">
         <div className="py-5 flex justify-between items-center">
           <h1 className="text-3xl font-semibold text-white">
