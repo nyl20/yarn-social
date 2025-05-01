@@ -180,7 +180,8 @@ export default function Posts() {
         />
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 px-6">
+      <div className="w-full flex justify-center">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 px-6 max-w-[1400px] w-full place-items-center">
         {filteredPosts.map((post, idx) => (
           <button
             key={idx}
@@ -205,6 +206,7 @@ export default function Posts() {
           <PostCard key={index} {...post} />
         ))} */}
       </div>
+    </div>
     </div>
   )
 }
