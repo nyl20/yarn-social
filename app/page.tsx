@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import PostCard from '@/components/PostCard'
-import { db } from '@/database/db'
+// import { db } from '@/database/db'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from "next-auth/react"

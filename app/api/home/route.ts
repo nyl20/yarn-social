@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+// import { getServerSession } from 'next-auth'
+// import { authOptions } from '@/lib/auth'
 import { db } from '@/database/db'
-import { posts } from '@/database/schema/posts'
+// import { posts } from '@/database/schema/posts'
 
 
 export async function GET() {
