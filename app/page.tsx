@@ -132,6 +132,7 @@ export default function LandingPage() {
             >
               <PostCard
                 key={idx}
+                id={post.id}
                 title={post.title}
                 description={post.description || ''
                 }
@@ -158,6 +159,7 @@ export default function LandingPage() {
             >
               <PostCard
                 key={idx}
+                id={post.id}
                 title={post.title}
                 description={post.description || ''
                 }
