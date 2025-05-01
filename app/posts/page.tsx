@@ -190,6 +190,7 @@ export default function Posts() {
           >
             <PostCard
               key={idx}
+              id={post.id}
               title={post.title}
               description={post.description || ''
               }

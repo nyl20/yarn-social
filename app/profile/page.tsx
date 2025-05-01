@@ -232,6 +232,7 @@ export default function ProfilePage() {
               {posts.map(post => (
                 <PostCard
                   key={post.id}
+                  id={post.id}
                   title={post.title}
                   description={post.description || ''}
                   author={post.userName || ''}
