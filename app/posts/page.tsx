@@ -108,7 +108,7 @@ export default function Posts() {
           },
           body: JSON.stringify({ postId }),
         })
-        router.push('/posts')
+        router.push(`/${postId}`)
       } catch (error) {
         console.error('Error updating views:', error)
       }
