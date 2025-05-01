@@ -36,7 +36,7 @@ export default function PostCardProfile({
 
       <Link
         href={`/${id}`}
-        className="flex flex-col justify-between px-4 py-3 sm:p-6 text-left flex-1"
+        className="flex flex-col justify-between px-4 py-3 sm:p-6 text-left flex-1 cursor-pointer"
       >
         <div>
           <h3 className="font-bold text-base sm:text-lg md:text-xl mb-1 sm:mb-2 text-gray-900">{title}</h3>
