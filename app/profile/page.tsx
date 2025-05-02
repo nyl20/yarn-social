@@ -31,10 +31,28 @@ export default function ProfilePage() {
     userName: string;
   };
 
+  type Profile = {
+    id: string;
+    username: string;
+    bio: string;
+    completed: boolean;
+    image: string;
+    type: string;
+    url: string;
+  }
+
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [posts, setPosts] = useState<Post[]>([])
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [editForm, setEditForm] = useState({
+    username: '',
+    bio: '',
+    url: '',
+    image: '',
+    type: '',
+  });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -53,6 +71,20 @@ export default function ProfilePage() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
+  const fetchProfile = async () => {
+    if (!session?.user?.id) return
+
+    const res = await fetch(`/api/profiles?userId=${session.user.id}`)
+    const data = await res.json()
+
+    if (res.ok) {
+      console.log('setting profile data')
+      setProfile(data)
+    } else {
+      console.error(data.error || 'Failed to fetch posts')
+    }
+  }
+
   const fetchPosts = async () => {
     if (!session?.user?.id) return
 
@@ -68,7 +100,60 @@ export default function ProfilePage() {
 
   useEffect(() => {
     fetchPosts()
+    fetchProfile()
+    console.log(profile)
   }, [session])
+
+  useEffect(() => {
+    if (profile) {
+      setEditForm({
+        username: profile.username || '',
+        bio: profile.bio || '',
+        url: profile.url || '',
+        image: profile.image || '',
+        type: profile.type || '',
+      });
+    }
+  }, [profile]);  
+
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setEditForm(prev => ({ ...prev, image: base64 }));
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleProfileEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const saveProfileChanges = async () => {
+    if (!session?.user?.id) return;
+  
+    const res = await fetch('/api/profiles', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...editForm, userId: session.user.id }),
+    });
+  
+    if (res.ok) {
+      setShowEdit(false);
+      await fetchProfile();
+    } else {
+      alert('Failed to update profile');
+    }
+  };
+  
+  
+  const handlePostDelete = (deletedPostId: string) => {
+    // Update posts state to remove the deleted post
+    setPosts(currentPosts => currentPosts.filter(post => post.id !== deletedPostId))
+  }
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -196,67 +281,150 @@ export default function ProfilePage() {
           )}
         </div>
 
-          {/* User Profile Card with Dummy Data */}
-          <div className="flex flex-col items-center text-center space-y-4 my-10 relative text-white">
-            {/* Profile Image */}
-            <img
-              src="/images/profile_sample.jpg"
-              alt="Profile"
-              className="w-32 h-32 rounded-full object-cover border-4 border-white"
-            />
+        {/* User Profile Card with Dummy Data */}
+        <div className="flex flex-col items-center text-center space-y-4 my-10 relative text-white">
+          {/* Profile Image */}
+          <img
+            src={profile?.image || "/images/profile_sample.jpg"}
+            alt="Profile"
+            className="w-32 h-32 rounded-full object-cover border-4 border-white"
+          />
 
-            {/* Username */}
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Grace G</h2>
+          {/* Username */}
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">{profile?.username || session?.user?.name}</h2>
 
-            {/* Identity badge (Show one of them*/}
-            {/* Individual */}
-            <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
-              🧵 Individual Crafter
-            </div>
-            {/* Shop
-            <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
-              🏪 Shop
-            </div> */}
+          {/* Identity badge (Show one of them*/}
+          {
+            profile?.type === 'shop' ? (
+              <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
+                🏪 Shop
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-sm font-medium bg-white text-[#4497B7] px-3 py-1 border-black border-2 rounded-full shadow-md">
+                🧵 Individual Crafter
+              </div>
+            )
+          }
 
-            {/* Bio */}
-            <p className="text-sm sm:text-base text-gray-200 max-w-md">
-              <span className="font-semibold text-white">Bio:</span> Yeah! Full of passion for crafting!
-            </p>
+          {/* Bio */}
+          <p className="text-sm sm:text-base text-gray-200 max-w-md">
+            <span className="font-semibold text-white">Bio:</span> {profile?.bio || 'No bio written yet'}
+          </p>
 
-            {/* Website */}
-            <a
-              href="https://doublegg.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[F9E6D1] hover:text-cyan-300 text-sm underline"
+          {/* Website */}
+          <a
+            href={profile?.url || ''}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[F9E6D1] hover:text-cyan-300 text-sm underline"
+          >
+            {profile?.url || ''}
+          </a>
+
+          {/* Edit Button */}
+          <div className="absolute top-0 right-0 sm:right-8">
+            <button
+              onClick={() => setShowEdit(prev => !prev)}
+              className="p-2 hover:bg-white/10 rounded-full border-2 cursor-pointer"
             >
-              https://doublegg.com
-            </a>
+              <Pencil className="w-5 h-5 text-white" />
+            </button>
 
-            {/* Edit Button */}
-            <div className="absolute top-0 right-0 sm:right-8">
-              <button
-                onClick={() => setShowEdit(prev => !prev)}
-                className="p-2 hover:bg-white/10 rounded-full border-2 cursor-pointer"
-              >
-                <Pencil className="w-5 h-5 text-white" />
-              </button>
-
-              {showEdit && (
-                <div className="absolute right-0 mt-2 bg-white border-2 border-black rounded shadow-lg z-50">
-                  <button
-                    onClick={() => {
-                      setShowEdit(false)
-                      // enable edit feature ...
-                    }}
-                    className="px-4 py-2 text-sm text-black hover:bg-gray-100 w-full text-left font-medium"
-                  >
-                    Edit
-                  </button>
-                </div>
-              )}
+            {showEdit && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 rounded shadow-lg relative">
+                <button
+                  onClick={() => setShowEdit(false)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+                >
+                  ×
+                </button>
+                <h2 className="my-4 text-xl text-left text-black">Edit Your Profile</h2>
+                
+                <div className="space-y-4 text-left text-black">
+            <div>
+              <label className="block font-semibold mb-1">Name</label>
+              <input
+                name="username"
+                value={editForm.username}
+                onChange={handleProfileEditChange}
+                placeholder="Enter your name"
+                className="w-full border p-2 rounded"
+              />
             </div>
+            <div>
+              <label className="block font-semibold mb-1">Bio</label>
+              <textarea
+                name="bio"
+                value={editForm.bio}
+                onChange={handleProfileEditChange}
+                placeholder="Tell us about yourself"
+                className="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-1">Website URL</label>
+              <input
+                name="url"
+                value={editForm.url}
+                onChange={handleProfileEditChange}
+                placeholder="https://example.com"
+                className="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-1">Account Type</label>
+              <select
+                name="type"
+                value={editForm.type}
+                onChange={handleProfileEditChange}
+                className="w-full border p-2 rounded"
+              >
+                <option value="">Select type</option>
+                <option value="crafter">Individual Crafter</option>
+                <option value="shop">Shop</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-1">Profile Image</label>
+              {editForm.image && (
+                <img
+                  src={editForm.image}
+                  alt="Profile preview"
+                  className="w-32 h-32 rounded-full object-cover border mx-auto mt-4"
+                />
+              )}
+              <br />
+              <label
+                htmlFor="profileImageUpload"
+                className="w-full border border-black text-black px-2 py-2 rounded cursor-pointer block text-center"
+              >
+                Upload Profile Image
+              </label>
+              <input
+                id="profileImageUpload"
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImageUpload}
+                className="hidden"
+              />
+            </div>
+
+            <button
+              onClick={saveProfileChanges}
+              className="w-full bg-[#4497B7] text-white py-2 rounded hover:bg-[#417e96]"
+            >
+              Save Changes
+            </button>
           </div>
+              </div>
+            </div>
+          )}
+          </div>
+        </div>
 
         <div className="w-full">
           <h2 className="text-2xl font-semibold py-5 text-white">Your Posts</h2>
@@ -274,6 +442,7 @@ export default function ProfilePage() {
                   date={post.updatedAt}
                   tags={post.tag || []}
                   image={post.image || ''}
+                  onDelete={handlePostDelete}
                 />
               ))}
             </div>)}

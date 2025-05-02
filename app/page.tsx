@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import PostCard from '@/components/PostCard'
-import { db } from '@/database/db'
+// import { db } from '@/database/db'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from "next-auth/react"
@@ -46,38 +46,10 @@ export default function LandingPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // Fetch patterns
-        const patternsData = await db.query.posts.findMany({
-          where: (posts, { eq }) => eq(posts.category, 'pattern'),
-          limit: 5,
-          with: {
-            user: {
-              columns: {
-                name: true,
-                email: true
-              }
-            }
-          },
-          orderBy: (posts, { desc }) => [desc(posts.views)]
-        })
-
-        // Fetch shops
-        const shopsData = await db.query.posts.findMany({
-          where: (posts, { eq }) => eq(posts.category, 'shop'),
-          limit: 5,
-          with: {
-            user: {
-              columns: {
-                name: true,
-                email: true
-              }
-            }
-          },
-          orderBy: (posts, { desc }) => [desc(posts.views)]
-        })
-
-        setPatterns(patternsData)
-        setShops(shopsData)
+        const res = await fetch('/api/home')
+        const postsData = await res.json()
+        setShops(postsData.shops)
+        setPatterns(postsData.patterns)
       } catch (error) {
         console.error('Error fetching posts:', error)
       }
@@ -85,6 +57,7 @@ export default function LandingPage() {
 
     fetchPosts()
   }, [])
+
 
   const router = useRouter()
   const handlePostClick = async (postId: string) => {

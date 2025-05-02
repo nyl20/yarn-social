@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { MoreHorizontal } from 'lucide-react'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type Props = {
   id: string
@@ -13,7 +14,7 @@ type Props = {
   date: Date
   tags: string[]
   image: string
-  onDelete?: () => void
+  onDelete?: (id: string) => void
 }
 
 export default function PostCardProfile({
@@ -26,7 +27,39 @@ export default function PostCardProfile({
   image,
   onDelete
 }: Props) {
+  const router = useRouter()
+  const [isDeleting, setIsDeleting] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this post?')) {
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+      const res = await fetch('/api/posts/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ postId: id }),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to delete post')
+      }
+
+      onDelete?.(id)
+      router.refresh()
+    } catch (error) {
+      console.error('Error deleting post:', error)
+      alert('Failed to delete post')
+    } finally {
+      setIsDeleting(false)
+      setShowMenu(false)
+    }
+  }
 
   return (
     <div className="relative flex flex-row w-full bg-white shadow rounded-xl overflow-hidden hover:shadow-md transition max-w-5xl mx-auto">
@@ -66,6 +99,7 @@ export default function PostCardProfile({
         <button
           onClick={() => setShowMenu((prev) => !prev)}
           className="p-1 rounded hover:bg-gray-100"
+          disabled={isDeleting}
         >
           <MoreHorizontal className="text-gray-500" />
         </button>
@@ -75,11 +109,12 @@ export default function PostCardProfile({
             <button
               onClick={() => {
                 setShowMenu(false)
-                onDelete?.()
+                handleDelete()
               }}
+              disabled={isDeleting}
               className="px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
             >
-              Delete
+              {isDeleting ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         )}
