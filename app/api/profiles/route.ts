@@ -36,3 +36,30 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { userId, username, bio, url, image, type } = await request.json();
+
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+    }
+
+    await db
+      .update(profiles)
+      .set({
+        username,
+        bio,
+        url,
+        image,
+        type,
+        updatedAt: new Date(),
+      })
+      .where(eq(profiles.userId, userId));
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
+  }
+}

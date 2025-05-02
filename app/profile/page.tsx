@@ -46,6 +46,13 @@ export default function ProfilePage() {
   const [success, setSuccess] = useState(false)
   const [posts, setPosts] = useState<Post[]>([])
   const [profile, setProfile] = useState<Profile | null>(null)
+  const [editForm, setEditForm] = useState({
+    username: '',
+    bio: '',
+    url: '',
+    image: '',
+    type: '',
+  });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -97,6 +104,52 @@ export default function ProfilePage() {
     console.log(profile)
   }, [session])
 
+  useEffect(() => {
+    if (profile) {
+      setEditForm({
+        username: profile.username || '',
+        bio: profile.bio || '',
+        url: profile.url || '',
+        image: profile.image || '',
+        type: profile.type || '',
+      });
+    }
+  }, [profile]);  
+
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setEditForm(prev => ({ ...prev, image: base64 }));
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleProfileEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const saveProfileChanges = async () => {
+    if (!session?.user?.id) return;
+  
+    const res = await fetch('/api/profiles', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...editForm, userId: session.user.id }),
+    });
+  
+    if (res.ok) {
+      setShowEdit(false);
+      await fetchProfile();
+    } else {
+      alert('Failed to update profile');
+    }
+  };
+  
+  
   const handlePostDelete = (deletedPostId: string) => {
     // Update posts state to remove the deleted post
     setPosts(currentPosts => currentPosts.filter(post => post.id !== deletedPostId))
@@ -278,18 +331,98 @@ export default function ProfilePage() {
             </button>
 
             {showEdit && (
-              <div className="absolute right-0 mt-2 bg-white border-2 border-black rounded shadow-lg z-50">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 rounded shadow-lg relative">
                 <button
-                  onClick={() => {
-                    setShowEdit(false)
-                    // enable edit feature ...
-                  }}
-                  className="px-4 py-2 text-sm text-black hover:bg-gray-100 w-full text-left font-medium"
+                  onClick={() => setShowEdit(false)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
                 >
-                  Edit
+                  ×
                 </button>
+                <h2 className="my-4 text-xl text-left text-black">Edit Your Profile</h2>
+                
+                <div className="space-y-4 text-left text-black">
+            <div>
+              <label className="block font-semibold mb-1">Name</label>
+              <input
+                name="username"
+                value={editForm.username}
+                onChange={handleProfileEditChange}
+                placeholder="Enter your name"
+                className="w-full border p-2 rounded"
+              />
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Bio</label>
+              <textarea
+                name="bio"
+                value={editForm.bio}
+                onChange={handleProfileEditChange}
+                placeholder="Tell us about yourself"
+                className="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-1">Website URL</label>
+              <input
+                name="url"
+                value={editForm.url}
+                onChange={handleProfileEditChange}
+                placeholder="https://example.com"
+                className="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-1">Account Type</label>
+              <select
+                name="type"
+                value={editForm.type}
+                onChange={handleProfileEditChange}
+                className="w-full border p-2 rounded"
+              >
+                <option value="">Select type</option>
+                <option value="crafter">Individual Crafter</option>
+                <option value="shop">Shop</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-1">Profile Image</label>
+              {editForm.image && (
+                <img
+                  src={editForm.image}
+                  alt="Profile preview"
+                  className="w-32 h-32 rounded-full object-cover border mx-auto mt-4"
+                />
+              )}
+              <br />
+              <label
+                htmlFor="profileImageUpload"
+                className="w-full border border-black text-black px-2 py-2 rounded cursor-pointer block text-center"
+              >
+                Upload Profile Image
+              </label>
+              <input
+                id="profileImageUpload"
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImageUpload}
+                className="hidden"
+              />
+            </div>
+
+            <button
+              onClick={saveProfileChanges}
+              className="w-full bg-[#4497B7] text-white py-2 rounded hover:bg-[#417e96]"
+            >
+              Save Changes
+            </button>
+          </div>
               </div>
-            )}
+            </div>
+          )}
           </div>
         </div>
 
