@@ -95,7 +95,7 @@ export default function PostCardProfile({
       </Link>
 
 
-      <div className="absolute top-2 right-2 z-50">
+      <div className="absolute top-2 right-2 z-40">
         <button
           onClick={() => setShowMenu((prev) => !prev)}
           className="p-1 rounded hover:bg-gray-100"
