@@ -232,7 +232,7 @@ export default function ProfilePage() {
         <div className="flex flex-col items-center text-center space-y-4 my-10 relative text-white">
           {/* Profile Image */}
           <img
-            src={profile?.image || "/images/profile_sample.jpg"}
+            src={profile?.image || "/images/default_profile.jpg"}
             alt="Profile"
             className="w-32 h-32 rounded-full object-cover border-4 border-white"
           />
