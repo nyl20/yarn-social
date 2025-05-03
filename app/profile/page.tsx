@@ -58,6 +58,14 @@ export default function ProfilePage() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    const maxImageSizeMB = 2.5
+    const maxImageSizeBytes = maxImageSizeMB * 1024 * 1024
+
+    if (file.size > maxImageSizeBytes) {
+      setError(`Image size too large. Maximum size is ${maxImageSizeMB} MB.`)
+      return
+    }
+
     const reader = new FileReader()
     reader.onloadend = () => {
       const base64String = reader.result as string
@@ -260,7 +268,9 @@ export default function ProfilePage() {
                     />
                   </div>
 
-                  {preview && (
+                  {error && <p className="text-red-600 text-sm">{error}</p>}
+
+                  {!error && preview && (
                     <img
                       src={preview}
                       alt="Preview"
@@ -383,7 +393,7 @@ export default function ProfilePage() {
                 className="w-full border p-2 rounded"
               >
                 <option value="">Select type</option>
-                <option value="crafter">Individual Crafter</option>
+                <option value="individual">Individual</option>
                 <option value="shop">Shop</option>
               </select>
             </div>
