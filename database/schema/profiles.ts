@@ -15,8 +15,7 @@ export const profiles = pgTable("profiles", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  type: text("type")
-    .references(() => users.role, { onDelete: "cascade" }),
+  type: text("type"),
   bio: text("bio"),
   image: text("image"),
   url: text("url")
