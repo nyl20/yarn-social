@@ -180,6 +180,11 @@ export default function ProfilePage() {
     setError('')
     setSuccess(false)
 
+    if (!form.image){
+      setError('Please upload an image')
+      return
+    }
+
     const res = await fetch('/api/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -431,6 +436,8 @@ export default function ProfilePage() {
                 className="hidden"
               />
             </div>
+
+            {error && <p className="text-red-600 text-sm">{error}</p>}
 
             <button
               onClick={saveProfileChanges}
