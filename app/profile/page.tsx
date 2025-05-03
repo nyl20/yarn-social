@@ -268,8 +268,6 @@ export default function ProfilePage() {
                     />
                   </div>
 
-                  {error && <p className="text-red-600 text-sm">{error}</p>}
-
                   {!error && preview && (
                     <img
                       src={preview}
