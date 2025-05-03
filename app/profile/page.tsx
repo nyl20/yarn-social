@@ -54,7 +54,7 @@ export default function ProfilePage() {
     type: '',
   });
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePostImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -129,7 +129,16 @@ export default function ProfilePage() {
   const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
+
+    const maxImageSizeMB = 2.5
+    const maxImageSizeBytes = maxImageSizeMB * 1024 * 1024
+
+    setError('')
+
+    if (file.size > maxImageSizeBytes) {
+      setError(`Image size too large. Maximum size is ${maxImageSizeMB} MB.`)
+      return
+    }
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64 = reader.result as string;
@@ -265,7 +274,7 @@ export default function ProfilePage() {
                       id="imageUpload"
                       type="file"
                       accept="image/*"
-                      onChange={handleImageUpload}
+                      onChange={handlePostImageUpload}
                       className="hidden"
                     />
                   </div>
