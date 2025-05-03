@@ -61,6 +61,8 @@ export default function ProfilePage() {
     const maxImageSizeMB = 2.5
     const maxImageSizeBytes = maxImageSizeMB * 1024 * 1024
 
+    setError('')
+
     if (file.size > maxImageSizeBytes) {
       setError(`Image size too large. Maximum size is ${maxImageSizeMB} MB.`)
       return
