@@ -1,5 +1,6 @@
 import { db } from '@/database/db'
 import { profiles } from '@/database/schema/profiles'
+import { users } from '@/database/schema/auth'
 import { eq } from 'drizzle-orm'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -54,8 +55,16 @@ export async function PUT(request: NextRequest) {
         image,
         type,
         updatedAt: new Date(),
+        completed: true,
       })
       .where(eq(profiles.userId, userId));
+
+    await db
+      .update(users)
+      .set({
+        role:type
+      })
+      .where(eq(users.id, userId));
 
     return NextResponse.json({ success: true });
   } catch (error) {
