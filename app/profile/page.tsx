@@ -125,6 +125,18 @@ export default function ProfilePage() {
       });
     }
   }, [profile]);  
+
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setEditForm(prev => ({ ...prev, image: base64 }));
+    };
+    reader.readAsDataURL(file);
+  };
   
   const handleProfileEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setEditForm({ ...editForm, [e.target.name]: e.target.value });
@@ -406,10 +418,9 @@ export default function ProfilePage() {
                 id="profileImageUpload"
                 type="file"
                 accept="image/*"
-                onChange={handleImageUpload}
+                onChange={handleProfileImageUpload}
                 className="hidden"
               />
-              {error && <p className="text-red-600 text-sm">{error}</p>}
             </div>
 
             <button
