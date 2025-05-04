@@ -217,7 +217,7 @@ export default function ProfilePage() {
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-5 flex justify-between items-center">
           <h1 className="text-3xl font-semibold text-white">
-            Welcome, {session?.user?.name}
+            Welcome, {profile?.username || session?.user?.name}
           </h1>
 
           <button

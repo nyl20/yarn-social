@@ -62,7 +62,8 @@ export async function PUT(request: NextRequest) {
     await db
       .update(users)
       .set({
-        role:type
+        role: type,
+        name: username,
       })
       .where(eq(users.id, userId));
 
